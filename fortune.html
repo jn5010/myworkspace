@@ -10,8 +10,8 @@
 
     body {
       min-height: 100vh;
-      background: radial-gradient(ellipse at top, #1a0a2e 0%, #0a0a1a 60%, #050510 100%);
-      color: #e8e0f8;
+      background: radial-gradient(ellipse at 50% 0%, #061530 0%, #030c1e 50%, #020810 100%);
+      color: #c8deff;
       font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
       overflow-x: hidden;
       position: relative;
@@ -31,9 +31,9 @@
       top: 20px;
       right: 24px;
       z-index: 100;
-      background: rgba(155, 89, 182, 0.25);
-      border: 1px solid rgba(155, 89, 182, 0.6);
-      color: #e0c8f8;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid rgba(96, 165, 250, 0.55);
+      color: #bfdbfe;
       padding: 10px 18px;
       border-radius: 30px;
       cursor: pointer;
@@ -46,11 +46,11 @@
       gap: 8px;
     }
     #history-btn:hover {
-      background: rgba(155, 89, 182, 0.5);
-      box-shadow: 0 0 16px rgba(155, 89, 182, 0.5);
+      background: rgba(37, 99, 235, 0.4);
+      box-shadow: 0 0 18px rgba(96, 165, 250, 0.45);
     }
     #history-badge {
-      background: #9b59b6;
+      background: #2563eb;
       color: #fff;
       border-radius: 50%;
       width: 20px;
@@ -83,18 +83,18 @@
       font-size: 2.4rem;
       font-weight: 700;
       letter-spacing: 4px;
-      background: linear-gradient(135deg, #ffd700, #c084fc, #ffd700);
+      background: linear-gradient(135deg, #93c5fd, #e0f2fe, #7dd3fc, #bae6fd, #93c5fd);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: shimmer 4s linear infinite;
+      animation: shimmer 5s linear infinite;
       text-shadow: none;
-      filter: drop-shadow(0 0 18px rgba(255,215,0,0.35));
+      filter: drop-shadow(0 0 22px rgba(125, 211, 252, 0.5));
     }
     header p {
       margin-top: 10px;
-      color: rgba(200,185,240,0.75);
+      color: rgba(147, 197, 253, 0.7);
       font-size: 0.95rem;
       letter-spacing: 1px;
     }
@@ -145,16 +145,16 @@
 
     /* 카드 뒷면 */
     .card-back {
-      background: linear-gradient(145deg, #1e0a3c, #2d1155, #0f0728);
-      border: 1.5px solid rgba(155, 89, 182, 0.6);
+      background: linear-gradient(145deg, #03111f, #071e38, #020d1a);
+      border: 1.5px solid rgba(96, 165, 250, 0.55);
       box-shadow:
-        0 0 30px rgba(155, 89, 182, 0.25),
-        inset 0 0 40px rgba(100, 50, 180, 0.15);
+        0 0 35px rgba(56, 152, 236, 0.2),
+        inset 0 0 40px rgba(20, 70, 160, 0.18);
     }
     .card-back-pattern {
       width: 140px;
       height: 200px;
-      border: 1px solid rgba(255,215,0,0.25);
+      border: 1px solid rgba(125, 211, 252, 0.3);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -166,12 +166,12 @@
       content: '';
       position: absolute;
       inset: 8px;
-      border: 1px solid rgba(255,215,0,0.15);
+      border: 1px solid rgba(125, 211, 252, 0.15);
       border-radius: 6px;
     }
     .card-back-symbol {
       font-size: 3.5rem;
-      filter: drop-shadow(0 0 12px rgba(255,215,0,0.4));
+      filter: drop-shadow(0 0 14px rgba(125, 211, 252, 0.6));
       animation: float 3s ease-in-out infinite;
     }
     @keyframes float {
@@ -184,32 +184,32 @@
       transform: rotateY(180deg);
       flex-direction: column;
       gap: 12px;
-      border: 1.5px solid rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(147, 197, 253, 0.3);
       box-shadow: 0 0 40px rgba(0,0,0,0.4);
     }
     .card-front-emoji {
       font-size: 4rem;
-      filter: drop-shadow(0 0 16px rgba(255,255,255,0.4));
+      filter: drop-shadow(0 0 16px rgba(186, 230, 253, 0.5));
       animation: float 3s ease-in-out infinite;
     }
     .card-front-name {
       font-size: 1.15rem;
       font-weight: 700;
       letter-spacing: 2px;
-      color: #fff;
-      text-shadow: 0 0 12px rgba(255,255,255,0.5);
+      color: #e0f2fe;
+      text-shadow: 0 0 14px rgba(125, 211, 252, 0.6);
       text-align: center;
     }
     .card-front-divider {
       width: 60px;
       height: 1px;
-      background: rgba(255,255,255,0.35);
+      background: rgba(147, 197, 253, 0.4);
       border-radius: 1px;
     }
     .card-front-theme {
       font-size: 0.78rem;
       letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(186, 230, 253, 0.7);
       text-transform: uppercase;
     }
 
@@ -219,7 +219,7 @@
       content: '✦';
       position: absolute;
       font-size: 0.65rem;
-      color: rgba(255,215,0,0.45);
+      color: rgba(125, 211, 252, 0.55);
     }
     .card-back::before { top: 14px; left: 14px; }
     .card-back::after  { bottom: 14px; right: 14px; }
@@ -227,16 +227,18 @@
     /* ── 운세 메시지 박스 ── */
     .fortune-box {
       width: 100%;
-      background: rgba(26, 10, 46, 0.75);
-      border: 1px solid rgba(155, 89, 182, 0.45);
+      background: rgba(3, 12, 28, 0.78);
+      border: 1px solid rgba(96, 165, 250, 0.4);
       border-radius: 16px;
       padding: 28px 28px;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       text-align: center;
       opacity: 0;
       transform: translateY(16px);
       transition: opacity 0.6s ease, transform 0.6s ease;
-      box-shadow: 0 0 30px rgba(155, 89, 182, 0.12);
+      box-shadow:
+        0 0 30px rgba(56, 152, 236, 0.1),
+        inset 0 0 60px rgba(14, 50, 100, 0.1);
     }
     .fortune-box.visible {
       opacity: 1;
@@ -245,14 +247,14 @@
     .fortune-box-title {
       font-size: 0.78rem;
       letter-spacing: 3px;
-      color: #c084fc;
+      color: #7dd3fc;
       text-transform: uppercase;
       margin-bottom: 12px;
     }
     .fortune-box-message {
       font-size: 1.05rem;
       line-height: 1.9;
-      color: #e8e0f8;
+      color: #c8deff;
       word-break: keep-all;
     }
 
@@ -266,11 +268,11 @@
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      background: linear-gradient(135deg, #7c3aed, #9b59b6, #c084fc);
+      background: linear-gradient(135deg, #1d4ed8, #2563eb, #3b82f6, #60a5fa);
       color: #fff;
       box-shadow:
-        0 4px 24px rgba(124, 58, 237, 0.45),
-        0 0 0 0 rgba(124, 58, 237, 0.5);
+        0 4px 24px rgba(37, 99, 235, 0.5),
+        0 0 0 0 rgba(37, 99, 235, 0.4);
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
@@ -279,14 +281,14 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.12));
+      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1));
       pointer-events: none;
     }
     #draw-btn:hover {
       transform: translateY(-2px);
       box-shadow:
-        0 8px 32px rgba(124, 58, 237, 0.6),
-        0 0 0 6px rgba(124, 58, 237, 0.15);
+        0 8px 32px rgba(37, 99, 235, 0.65),
+        0 0 0 6px rgba(59, 130, 246, 0.18);
     }
     #draw-btn:active {
       transform: translateY(0);
@@ -301,7 +303,7 @@
     #overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.55);
+      background: rgba(0, 5, 18, 0.6);
       z-index: 200;
       opacity: 0;
       pointer-events: none;
@@ -319,14 +321,14 @@
       right: 0;
       width: min(380px, 92vw);
       height: 100vh;
-      background: linear-gradient(180deg, #130526 0%, #0d0220 100%);
-      border-left: 1px solid rgba(155, 89, 182, 0.4);
+      background: linear-gradient(180deg, #030f22 0%, #020a18 100%);
+      border-left: 1px solid rgba(96, 165, 250, 0.35);
       z-index: 300;
       display: flex;
       flex-direction: column;
       transform: translateX(100%);
       transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+      box-shadow: -8px 0 50px rgba(0, 10, 40, 0.7);
     }
     #history-panel.open {
       transform: translateX(0);
@@ -337,18 +339,18 @@
       align-items: center;
       justify-content: space-between;
       padding: 24px 22px 18px;
-      border-bottom: 1px solid rgba(155, 89, 182, 0.25);
+      border-bottom: 1px solid rgba(96, 165, 250, 0.2);
     }
     .panel-title {
       font-size: 1.05rem;
       font-weight: 700;
       letter-spacing: 2px;
-      color: #c084fc;
+      color: #7dd3fc;
     }
     #panel-close {
       background: none;
       border: none;
-      color: rgba(200,185,240,0.7);
+      color: rgba(147, 197, 253, 0.65);
       font-size: 1.4rem;
       cursor: pointer;
       line-height: 1;
@@ -357,8 +359,8 @@
       transition: color 0.2s, background 0.2s;
     }
     #panel-close:hover {
-      color: #fff;
-      background: rgba(155, 89, 182, 0.3);
+      color: #e0f2fe;
+      background: rgba(37, 99, 235, 0.3);
     }
 
     .history-list {
@@ -371,7 +373,7 @@
     }
     .history-list::-webkit-scrollbar { width: 4px; }
     .history-list::-webkit-scrollbar-track { background: transparent; }
-    .history-list::-webkit-scrollbar-thumb { background: rgba(155,89,182,0.4); border-radius: 2px; }
+    .history-list::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.4); border-radius: 2px; }
 
     .history-empty {
       flex: 1;
@@ -379,7 +381,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: rgba(200,185,240,0.4);
+      color: rgba(147, 197, 253, 0.35);
       font-size: 0.95rem;
       gap: 10px;
       letter-spacing: 1px;
@@ -387,13 +389,13 @@
     .history-empty span { font-size: 2.2rem; }
 
     .history-item {
-      background: rgba(255,255,255,0.04);
+      background: rgba(14, 50, 100, 0.18);
       border-radius: 12px;
       padding: 14px 16px;
-      border-left: 3px solid #9b59b6;
+      border-left: 3px solid #2563eb;
       transition: background 0.2s;
     }
-    .history-item:hover { background: rgba(255,255,255,0.07); }
+    .history-item:hover { background: rgba(14, 50, 100, 0.32); }
     .history-item-header {
       display: flex;
       align-items: center;
@@ -405,19 +407,19 @@
     .history-item-name {
       font-size: 0.92rem;
       font-weight: 700;
-      color: #e0c8f8;
+      color: #bfdbfe;
       letter-spacing: 1px;
     }
     .history-item-date {
       font-size: 0.72rem;
-      color: rgba(200,185,240,0.5);
+      color: rgba(147, 197, 253, 0.5);
       margin-top: 2px;
       letter-spacing: 0.5px;
     }
     .history-item-message {
       font-size: 0.83rem;
       line-height: 1.7;
-      color: rgba(220,210,250,0.75);
+      color: rgba(186, 230, 253, 0.7);
       word-break: keep-all;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -427,14 +429,14 @@
 
     .panel-footer {
       padding: 16px 16px 24px;
-      border-top: 1px solid rgba(155, 89, 182, 0.2);
+      border-top: 1px solid rgba(96, 165, 250, 0.18);
     }
     #clear-btn {
       width: 100%;
       padding: 12px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: rgba(252, 165, 165, 0.9);
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: rgba(252, 165, 165, 0.85);
       border-radius: 10px;
       font-family: inherit;
       font-size: 0.88rem;
@@ -443,7 +445,7 @@
       transition: all 0.25s;
     }
     #clear-btn:hover {
-      background: rgba(239, 68, 68, 0.28);
+      background: rgba(239, 68, 68, 0.25);
       box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
     }
 
@@ -524,8 +526,8 @@
       name: '달의 속삭임',
       emoji: '🌙',
       theme: '직관 · 감성',
-      color: '#6366f1',
-      gradient: 'linear-gradient(145deg, #1e1b4b, #312e81)',
+      color: '#93c5fd',
+      gradient: 'linear-gradient(145deg, #0d1f3c, #162b52)',
       message: '오늘은 감정의 흐름을 따르는 것이 좋습니다.\n' +
                '내면의 목소리가 어느 때보다 또렷하게 들리는 날입니다.\n' +
                '직관을 믿고 행동하면 예상치 못한 인연이나 기회가 찾아올 것입니다.\n' +
@@ -535,8 +537,8 @@
       name: '태양의 축복',
       emoji: '☀️',
       theme: '성공 · 에너지',
-      color: '#f59e0b',
-      gradient: 'linear-gradient(145deg, #451a03, #78350f)',
+      color: '#38bdf8',
+      gradient: 'linear-gradient(145deg, #0a2a4a, #0c3d6e)',
       message: '강한 에너지가 당신을 감싸고 있는 날입니다.\n' +
                '도전하려 했던 일이 있다면 지금이 바로 그 순간입니다.\n' +
                '주변 사람들도 오늘의 당신에게서 밝은 기운을 느낄 것입니다.\n' +
@@ -546,67 +548,67 @@
       name: '별의 인도',
       emoji: '⭐',
       theme: '희망 · 방향',
-      color: '#0ea5e9',
-      gradient: 'linear-gradient(145deg, #082f49, #0c4a6e)',
+      color: '#a5b4fc',
+      gradient: 'linear-gradient(145deg, #080d2a, #0d1545)',
       message: '지금 걷고 있는 길이 맞는 길인지 고민이 될 수 있습니다.\n' +
                '하지만 별빛은 언제나 당신이 올바른 방향을 향하고 있음을 알려줍니다.\n' +
                '작은 목표 하나를 적어두고 첫 한 걸음을 내딛어 보세요.\n' +
                '멀리 있는 꿈도 오늘의 작은 행동에서 시작됩니다.'
     },
     {
-      name: '불꽃의 열정',
-      emoji: '🔥',
+      name: '파도의 열정',
+      emoji: '🌊',
       theme: '도전 · 변화',
-      color: '#ef4444',
-      gradient: 'linear-gradient(145deg, #450a0a, #7f1d1d)',
+      color: '#2563eb',
+      gradient: 'linear-gradient(145deg, #0a1535, #12235a)',
       message: '변화를 두려워하지 마세요. 오늘은 새로운 시작을 위한 최적의 날입니다.\n' +
-               '오래 미뤄왔던 도전이 있다면 불꽃처럼 뜨겁게 뛰어드세요.\n' +
+               '파도처럼 힘차게 밀려들어 세상을 향해 뛰어드세요.\n' +
                '지금의 불편함은 성장의 증거입니다.\n' +
                '행동하는 사람에게만 기회는 찾아오는 법입니다.'
     },
     {
-      name: '물의 흐름',
-      emoji: '🌊',
+      name: '심해의 고요',
+      emoji: '🐋',
       theme: '유연 · 적응',
-      color: '#06b6d4',
-      gradient: 'linear-gradient(145deg, #042f2e, #064e3b)',
+      color: '#0ea5e9',
+      gradient: 'linear-gradient(145deg, #052030, #083a55)',
       message: '모든 것을 통제하려 하기보다 흐름에 몸을 맡겨보세요.\n' +
                '유연하게 상황에 적응하는 능력이 오늘 큰 강점이 됩니다.\n' +
                '마찰이 생기는 관계가 있다면 한 발 물러서 여유를 갖는 것이 현명합니다.\n' +
-               '물처럼 부드럽되 꾸준한 사람이 결국 모든 것을 이겨냅니다.'
+               '깊은 바다처럼 고요함 속에서 무한한 힘이 솟아납니다.'
     },
     {
       name: '수정의 지혜',
       emoji: '💎',
       theme: '명석 · 통찰',
-      color: '#8b5cf6',
-      gradient: 'linear-gradient(145deg, #2e1065, #3b0764)',
+      color: '#bae6fd',
+      gradient: 'linear-gradient(145deg, #0e1e35, #162e50)',
       message: '오늘은 평소보다 사고가 명료하고 판단력이 뛰어난 날입니다.\n' +
                '중요한 결정을 내려야 한다면 오늘이 적절한 시기입니다.\n' +
                '복잡하게 얽힌 문제의 핵심이 보이기 시작할 것입니다.\n' +
                '당신 안에 있는 지혜를 믿고 당당하게 결론을 내려보세요.'
     },
     {
-      name: '장미의 인연',
-      emoji: '🌹',
+      name: '빙하의 인연',
+      emoji: '❄️',
       theme: '사랑 · 관계',
-      color: '#ec4899',
-      gradient: 'linear-gradient(145deg, #500724, #831843)',
+      color: '#60a5fa',
+      gradient: 'linear-gradient(145deg, #0c1a3a, #122a5a)',
       message: '소중한 사람과의 인연이 더욱 깊어지는 날입니다.\n' +
                '오래 연락하지 못했던 사람에게 먼저 마음을 전해보세요.\n' +
                '사랑은 표현하는 만큼 자라납니다. 마음 속 따뜻한 감정을 꺼내어 나누세요.\n' +
                '뜻하지 않은 곳에서 새로운 인연의 씨앗이 싹틀 수도 있습니다.'
     },
     {
-      name: '나비의 변신',
-      emoji: '🦋',
+      name: '오로라의 변신',
+      emoji: '🌌',
       theme: '성장 · 전환',
-      color: '#10b981',
-      gradient: 'linear-gradient(145deg, #022c22, #064e3b)',
+      color: '#22d3ee',
+      gradient: 'linear-gradient(145deg, #061a30, #0a2d50)',
       message: '지금 당신은 중요한 변화의 시기를 지나고 있습니다.\n' +
-               '번데기 속에서 나비가 날개를 키우듯, 보이지 않는 성장이 이루어지고 있습니다.\n' +
+               '오로라처럼 하늘을 물들이는 아름다운 변화가 시작되고 있습니다.\n' +
                '과거의 자신과 비교하며 조급해하지 마세요.\n' +
-               '때가 되면 반드시 아름다운 모습으로 날아오를 것입니다.'
+               '때가 되면 반드시 눈부신 모습으로 세상을 빛낼 것입니다.'
     }
   ];
 
@@ -665,7 +667,7 @@
         if (s.alpha < 0.1) s.dir =  1;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(220, 210, 255, ${s.alpha})`;
+        ctx.fillStyle = `rgba(176, 218, 255, ${s.alpha})`;
         ctx.fill();
       });
       requestAnimationFrame(draw);
