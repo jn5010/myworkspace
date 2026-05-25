@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ 오늘의 운세 ✨</title>
+  <style>
+    /* ── 기본 리셋 & 폰트 ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at top, #1a0a2e 0%, #0a0a1a 60%, #050510 100%);
+      color: #e8e0f8;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── 별빛 배경 ── */
+    #stars-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── 히스토리 버튼 (우측 상단) ── */
+    #history-btn {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 100;
+      background: rgba(155, 89, 182, 0.25);
+      border: 1px solid rgba(155, 89, 182, 0.6);
+      color: #e0c8f8;
+      padding: 10px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-family: inherit;
+      transition: all 0.3s;
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #history-btn:hover {
+      background: rgba(155, 89, 182, 0.5);
+      box-shadow: 0 0 16px rgba(155, 89, 182, 0.5);
+    }
+    #history-badge {
+      background: #9b59b6;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+
+    /* ── 메인 레이아웃 ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 36px;
+    }
+
+    /* ── 헤더 ── */
+    header {
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #ffd700, #c084fc, #ffd700);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+      text-shadow: none;
+      filter: drop-shadow(0 0 18px rgba(255,215,0,0.35));
+    }
+    header p {
+      margin-top: 10px;
+      color: rgba(200,185,240,0.75);
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+    }
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+
+    /* ── 카드 영역 ── */
+    .card-scene {
+      perspective: 900px;
+      width: 220px;
+      height: 320px;
+    }
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+    }
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+    .card.shake {
+      animation: shake 0.5s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: rotateY(0) translateX(0); }
+      15%      { transform: rotateY(0) translateX(-8px) rotate(-2deg); }
+      30%      { transform: rotateY(0) translateX(8px)  rotate(2deg);  }
+      45%      { transform: rotateY(0) translateX(-6px) rotate(-1.5deg); }
+      60%      { transform: rotateY(0) translateX(6px)  rotate(1.5deg); }
+      75%      { transform: rotateY(0) translateX(-3px); }
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* 카드 뒷면 */
+    .card-back {
+      background: linear-gradient(145deg, #1e0a3c, #2d1155, #0f0728);
+      border: 1.5px solid rgba(155, 89, 182, 0.6);
+      box-shadow:
+        0 0 30px rgba(155, 89, 182, 0.25),
+        inset 0 0 40px rgba(100, 50, 180, 0.15);
+    }
+    .card-back-pattern {
+      width: 140px;
+      height: 200px;
+      border: 1px solid rgba(255,215,0,0.25);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-back-pattern::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 6px;
+    }
+    .card-back-symbol {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 0 12px rgba(255,215,0,0.4));
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0);   }
+      50%      { transform: translateY(-8px); }
+    }
+
+    /* 카드 앞면 */
+    .card-front {
+      transform: rotateY(180deg);
+      flex-direction: column;
+      gap: 12px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    }
+    .card-front-emoji {
+      font-size: 4rem;
+      filter: drop-shadow(0 0 16px rgba(255,255,255,0.4));
+      animation: float 3s ease-in-out infinite;
+    }
+    .card-front-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255,255,255,0.5);
+      text-align: center;
+    }
+    .card-front-divider {
+      width: 60px;
+      height: 1px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 1px;
+    }
+    .card-front-theme {
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+    }
+
+    /* 카드 글로우 코너 장식 */
+    .card-back::before,
+    .card-back::after {
+      content: '✦';
+      position: absolute;
+      font-size: 0.65rem;
+      color: rgba(255,215,0,0.45);
+    }
+    .card-back::before { top: 14px; left: 14px; }
+    .card-back::after  { bottom: 14px; right: 14px; }
+
+    /* ── 운세 메시지 박스 ── */
+    .fortune-box {
+      width: 100%;
+      background: rgba(26, 10, 46, 0.75);
+      border: 1px solid rgba(155, 89, 182, 0.45);
+      border-radius: 16px;
+      padding: 28px 28px;
+      backdrop-filter: blur(8px);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      box-shadow: 0 0 30px rgba(155, 89, 182, 0.12);
+    }
+    .fortune-box.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fortune-box-title {
+      font-size: 0.78rem;
+      letter-spacing: 3px;
+      color: #c084fc;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .fortune-box-message {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: #e8e0f8;
+      word-break: keep-all;
+    }
+
+    /* ── 뽑기 버튼 ── */
+    #draw-btn {
+      padding: 16px 48px;
+      font-size: 1.08rem;
+      font-family: inherit;
+      font-weight: 700;
+      letter-spacing: 2px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #7c3aed, #9b59b6, #c084fc);
+      color: #fff;
+      box-shadow:
+        0 4px 24px rgba(124, 58, 237, 0.45),
+        0 0 0 0 rgba(124, 58, 237, 0.5);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    #draw-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.12));
+      pointer-events: none;
+    }
+    #draw-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 8px 32px rgba(124, 58, 237, 0.6),
+        0 0 0 6px rgba(124, 58, 237, 0.15);
+    }
+    #draw-btn:active {
+      transform: translateY(0);
+    }
+    #draw-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── 히스토리 오버레이 & 패널 ── */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
+      backdrop-filter: blur(2px);
+    }
+    #overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #history-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(380px, 92vw);
+      height: 100vh;
+      background: linear-gradient(180deg, #130526 0%, #0d0220 100%);
+      border-left: 1px solid rgba(155, 89, 182, 0.4);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+    }
+    #history-panel.open {
+      transform: translateX(0);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 22px 18px;
+      border-bottom: 1px solid rgba(155, 89, 182, 0.25);
+    }
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #c084fc;
+    }
+    #panel-close {
+      background: none;
+      border: none;
+      color: rgba(200,185,240,0.7);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+    #panel-close:hover {
+      color: #fff;
+      background: rgba(155, 89, 182, 0.3);
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .history-list::-webkit-scrollbar { width: 4px; }
+    .history-list::-webkit-scrollbar-track { background: transparent; }
+    .history-list::-webkit-scrollbar-thumb { background: rgba(155,89,182,0.4); border-radius: 2px; }
+
+    .history-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(200,185,240,0.4);
+      font-size: 0.95rem;
+      gap: 10px;
+      letter-spacing: 1px;
+    }
+    .history-empty span { font-size: 2.2rem; }
+
+    .history-item {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 14px 16px;
+      border-left: 3px solid #9b59b6;
+      transition: background 0.2s;
+    }
+    .history-item:hover { background: rgba(255,255,255,0.07); }
+    .history-item-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .history-item-emoji { font-size: 1.5rem; }
+    .history-item-meta { flex: 1; }
+    .history-item-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #e0c8f8;
+      letter-spacing: 1px;
+    }
+    .history-item-date {
+      font-size: 0.72rem;
+      color: rgba(200,185,240,0.5);
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+    .history-item-message {
+      font-size: 0.83rem;
+      line-height: 1.7;
+      color: rgba(220,210,250,0.75);
+      word-break: keep-all;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .panel-footer {
+      padding: 16px 16px 24px;
+      border-top: 1px solid rgba(155, 89, 182, 0.2);
+    }
+    #clear-btn {
+      width: 100%;
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: rgba(252, 165, 165, 0.9);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    #clear-btn:hover {
+      background: rgba(239, 68, 68, 0.28);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 480px) {
+      .container { padding: 50px 16px 70px; gap: 28px; }
+      header h1 { font-size: 1.8rem; letter-spacing: 2px; }
+      .card-scene { width: 190px; height: 280px; }
+      .fortune-box { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- 히스토리 버튼 -->
+<button id="history-btn">
+  📜 히스토리
+  <span id="history-badge">0</span>
+</button>
+
+<!-- 히스토리 오버레이 & 패널 -->
+<div id="overlay"></div>
+<aside id="history-panel">
+  <div class="panel-header">
+    <span class="panel-title">🔮 나의 운세 기록</span>
+    <button id="panel-close">✕</button>
+  </div>
+  <div class="history-list" id="history-list">
+    <!-- JS로 채워짐 -->
+  </div>
+  <div class="panel-footer">
+    <button id="clear-btn">🗑 기록 전체 삭제</button>
+  </div>
+</aside>
+
+<!-- 메인 -->
+<div class="container">
+  <header>
+    <h1>✨ 오늘의 운세 ✨</h1>
+    <p>카드를 뽑아 오늘의 기운을 알아보세요</p>
+  </header>
+
+  <!-- 카드 -->
+  <div class="card-scene">
+    <div class="card" id="card">
+      <!-- 뒷면 -->
+      <div class="card-face card-back">
+        <div class="card-back-pattern">
+          <span class="card-back-symbol">🔮</span>
+        </div>
+      </div>
+      <!-- 앞면 -->
+      <div class="card-face card-front" id="card-front">
+        <span class="card-front-emoji" id="card-emoji">🌙</span>
+        <span class="card-front-name" id="card-name">달의 속삭임</span>
+        <div class="card-front-divider"></div>
+        <span class="card-front-theme" id="card-theme">직관 · 감성</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 운세 메시지 -->
+  <div class="fortune-box" id="fortune-box">
+    <div class="fortune-box-title">✦ 오늘의 메시지 ✦</div>
+    <p class="fortune-box-message" id="fortune-message"></p>
+  </div>
+
+  <!-- 버튼 -->
+  <button id="draw-btn">🌟 운세 뽑기</button>
+</div>
+
+<script>
+  /* ── 운세 카드 데이터 ── */
+  const fortuneCards = [
+    {
+      name: '달의 속삭임',
+      emoji: '🌙',
+      theme: '직관 · 감성',
+      color: '#6366f1',
+      gradient: 'linear-gradient(145deg, #1e1b4b, #312e81)',
+      message: '오늘은 감정의 흐름을 따르는 것이 좋습니다.\n' +
+               '내면의 목소리가 어느 때보다 또렷하게 들리는 날입니다.\n' +
+               '직관을 믿고 행동하면 예상치 못한 인연이나 기회가 찾아올 것입니다.\n' +
+               '밤에 잠들기 전 오늘 하루를 조용히 돌아보는 시간을 가져보세요.'
+    },
+    {
+      name: '태양의 축복',
+      emoji: '☀️',
+      theme: '성공 · 에너지',
+      color: '#f59e0b',
+      gradient: 'linear-gradient(145deg, #451a03, #78350f)',
+      message: '강한 에너지가 당신을 감싸고 있는 날입니다.\n' +
+               '도전하려 했던 일이 있다면 지금이 바로 그 순간입니다.\n' +
+               '주변 사람들도 오늘의 당신에게서 밝은 기운을 느낄 것입니다.\n' +
+               '자신감을 갖고 당당하게 나아가세요. 성공이 따라올 것입니다.'
+    },
+    {
+      name: '별의 인도',
+      emoji: '⭐',
+      theme: '희망 · 방향',
+      color: '#0ea5e9',
+      gradient: 'linear-gradient(145deg, #082f49, #0c4a6e)',
+      message: '지금 걷고 있는 길이 맞는 길인지 고민이 될 수 있습니다.\n' +
+               '하지만 별빛은 언제나 당신이 올바른 방향을 향하고 있음을 알려줍니다.\n' +
+               '작은 목표 하나를 적어두고 첫 한 걸음을 내딛어 보세요.\n' +
+               '멀리 있는 꿈도 오늘의 작은 행동에서 시작됩니다.'
+    },
+    {
+      name: '불꽃의 열정',
+      emoji: '🔥',
+      theme: '도전 · 변화',
+      color: '#ef4444',
+      gradient: 'linear-gradient(145deg, #450a0a, #7f1d1d)',
+      message: '변화를 두려워하지 마세요. 오늘은 새로운 시작을 위한 최적의 날입니다.\n' +
+               '오래 미뤄왔던 도전이 있다면 불꽃처럼 뜨겁게 뛰어드세요.\n' +
+               '지금의 불편함은 성장의 증거입니다.\n' +
+               '행동하는 사람에게만 기회는 찾아오는 법입니다.'
+    },
+    {
+      name: '물의 흐름',
+      emoji: '🌊',
+      theme: '유연 · 적응',
+      color: '#06b6d4',
+      gradient: 'linear-gradient(145deg, #042f2e, #064e3b)',
+      message: '모든 것을 통제하려 하기보다 흐름에 몸을 맡겨보세요.\n' +
+               '유연하게 상황에 적응하는 능력이 오늘 큰 강점이 됩니다.\n' +
+               '마찰이 생기는 관계가 있다면 한 발 물러서 여유를 갖는 것이 현명합니다.\n' +
+               '물처럼 부드럽되 꾸준한 사람이 결국 모든 것을 이겨냅니다.'
+    },
+    {
+      name: '수정의 지혜',
+      emoji: '💎',
+      theme: '명석 · 통찰',
+      color: '#8b5cf6',
+      gradient: 'linear-gradient(145deg, #2e1065, #3b0764)',
+      message: '오늘은 평소보다 사고가 명료하고 판단력이 뛰어난 날입니다.\n' +
+               '중요한 결정을 내려야 한다면 오늘이 적절한 시기입니다.\n' +
+               '복잡하게 얽힌 문제의 핵심이 보이기 시작할 것입니다.\n' +
+               '당신 안에 있는 지혜를 믿고 당당하게 결론을 내려보세요.'
+    },
+    {
+      name: '장미의 인연',
+      emoji: '🌹',
+      theme: '사랑 · 관계',
+      color: '#ec4899',
+      gradient: 'linear-gradient(145deg, #500724, #831843)',
+      message: '소중한 사람과의 인연이 더욱 깊어지는 날입니다.\n' +
+               '오래 연락하지 못했던 사람에게 먼저 마음을 전해보세요.\n' +
+               '사랑은 표현하는 만큼 자라납니다. 마음 속 따뜻한 감정을 꺼내어 나누세요.\n' +
+               '뜻하지 않은 곳에서 새로운 인연의 씨앗이 싹틀 수도 있습니다.'
+    },
+    {
+      name: '나비의 변신',
+      emoji: '🦋',
+      theme: '성장 · 전환',
+      color: '#10b981',
+      gradient: 'linear-gradient(145deg, #022c22, #064e3b)',
+      message: '지금 당신은 중요한 변화의 시기를 지나고 있습니다.\n' +
+               '번데기 속에서 나비가 날개를 키우듯, 보이지 않는 성장이 이루어지고 있습니다.\n' +
+               '과거의 자신과 비교하며 조급해하지 마세요.\n' +
+               '때가 되면 반드시 아름다운 모습으로 날아오를 것입니다.'
+    }
+  ];
+
+  /* ── 상태 ── */
+  let isFlipped = false;
+  let isAnimating = false;
+
+  /* ── DOM 참조 ── */
+  const card       = document.getElementById('card');
+  const cardFront  = document.getElementById('card-front');
+  const cardEmoji  = document.getElementById('card-emoji');
+  const cardName   = document.getElementById('card-name');
+  const cardTheme  = document.getElementById('card-theme');
+  const fortuneBox = document.getElementById('fortune-box');
+  const fortuneMsg = document.getElementById('fortune-message');
+  const drawBtn    = document.getElementById('draw-btn');
+  const historyBtn = document.getElementById('history-btn');
+  const badge      = document.getElementById('history-badge');
+  const overlay    = document.getElementById('overlay');
+  const panel      = document.getElementById('history-panel');
+  const panelClose = document.getElementById('panel-close');
+  const historyList= document.getElementById('history-list');
+  const clearBtn   = document.getElementById('clear-btn');
+
+  /* ── 별빛 배경 ── */
+  (function createStars() {
+    const canvas = document.getElementById('stars-canvas');
+    const ctx    = canvas.getContext('2d');
+    let stars = [];
+    let W, H;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', () => { resize(); initStars(); });
+
+    function initStars() {
+      stars = Array.from({ length: 160 }, () => ({
+        x:     Math.random() * W,
+        y:     Math.random() * H,
+        r:     Math.random() * 1.4 + 0.3,
+        alpha: Math.random() * 0.7 + 0.2,
+        speed: Math.random() * 0.4 + 0.1,
+        dir:   Math.random() > 0.5 ? 1 : -1
+      }));
+    }
+    initStars();
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      stars.forEach(s => {
+        s.alpha += 0.008 * s.dir;
+        if (s.alpha > 0.9) s.dir = -1;
+        if (s.alpha < 0.1) s.dir =  1;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220, 210, 255, ${s.alpha})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  /* ── localStorage 헬퍼 ── */
+  function getHistory() {
+    try { return JSON.parse(localStorage.getItem('fortuneHistory') || '[]'); }
+    catch { return []; }
+  }
+  function saveHistory(arr) {
+    localStorage.setItem('fortuneHistory', JSON.stringify(arr.slice(0, 20)));
+  }
+  function addToHistory(card) {
+    const now  = new Date();
+    const date = now.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' });
+    const time = now.toLocaleTimeString('ko-KR', { hour:'2-digit', minute:'2-digit' });
+    const item = {
+      date: `${date} ${time}`,
+      name: card.name,
+      emoji: card.emoji,
+      theme: card.theme,
+      color: card.color,
+      message: card.message
+    };
+    const history = getHistory();
+    history.unshift(item);
+    saveHistory(history);
+    updateBadge();
+  }
+
+  /* ── 배지 업데이트 ── */
+  function updateBadge() {
+    const count = getHistory().length;
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+  updateBadge();
+
+  /* ── 히스토리 패널 렌더링 ── */
+  function renderHistory() {
+    const history = getHistory();
+    historyList.innerHTML = '';
+
+    if (history.length === 0) {
+      historyList.innerHTML = `
+        <div class="history-empty">
+          <span>🔮</span>
+          아직 뽑은 운세가 없어요 ✨
+        </div>`;
+      return;
+    }
+
+    history.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'history-item';
+      el.style.borderLeftColor = item.color;
+      el.innerHTML = `
+        <div class="history-item-header">
+          <span class="history-item-emoji">${item.emoji}</span>
+          <div class="history-item-meta">
+            <div class="history-item-name">${item.name}</div>
+            <div class="history-item-date">${item.date}</div>
+          </div>
+        </div>
+        <div class="history-item-message">${item.message.replace(/\n/g, ' ')}</div>
+      `;
+      historyList.appendChild(el);
+    });
+  }
+
+  /* ── 패널 열기/닫기 ── */
+  function openPanel() {
+    renderHistory();
+    overlay.classList.add('open');
+    panel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePanel() {
+    overlay.classList.remove('open');
+    panel.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  historyBtn.addEventListener('click', openPanel);
+  overlay.addEventListener('click', closePanel);
+  panelClose.addEventListener('click', closePanel);
+
+  clearBtn.addEventListener('click', () => {
+    if (confirm('운세 기록을 모두 삭제할까요?')) {
+      localStorage.removeItem('fortuneHistory');
+      updateBadge();
+      renderHistory();
+    }
+  });
+
+  /* ── 운세 뽑기 ── */
+  drawBtn.addEventListener('click', () => {
+    if (isAnimating) return;
+    isAnimating = true;
+    drawBtn.disabled = true;
+
+    if (isFlipped) {
+      /* 리셋: 카드 다시 뒤집기 */
+      card.classList.remove('flipped');
+      fortuneBox.classList.remove('visible');
+      setTimeout(() => {
+        pickCard();
+      }, 600);
+    } else {
+      pickCard();
+    }
+  });
+
+  function pickCard() {
+    const chosen = fortuneCards[Math.floor(Math.random() * fortuneCards.length)];
+
+    /* 카드 앞면 내용 세팅 */
+    cardEmoji.textContent  = chosen.emoji;
+    cardName.textContent   = chosen.name;
+    cardTheme.textContent  = chosen.theme;
+    cardFront.style.background = chosen.gradient;
+    cardFront.style.boxShadow  = `0 0 50px ${chosen.color}55, inset 0 0 30px rgba(0,0,0,0.4)`;
+    cardFront.style.borderColor = `${chosen.color}88`;
+    fortuneMsg.textContent = chosen.message.replace(/\n/g, '\n');
+    fortuneMsg.style.whiteSpace = 'pre-line';
+
+    /* 흔들기 → 뒤집기 */
+    card.classList.add('shake');
+    setTimeout(() => {
+      card.classList.remove('shake');
+      card.classList.add('flipped');
+      isFlipped = true;
+
+      /* 메시지 fade-in */
+      setTimeout(() => {
+        fortuneBox.classList.add('visible');
+        isAnimating = false;
+        drawBtn.disabled = false;
+        drawBtn.textContent = '🔄 다시 뽑기';
+      }, 500);
+
+    }, 500);
+
+    /* 히스토리 저장 */
+    addToHistory(chosen);
+  }
+</script>
+</body>
+</html>
